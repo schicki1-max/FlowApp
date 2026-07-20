@@ -22,10 +22,7 @@ jobs:
         run: flutter build ipa --release --no-codesign
 
       - name: Upload to App Store
-        uses: apple-actions/upload-release-asset@v1
-        env:
-          APPLE_ID: ${{ secrets.APPLEID }}
-          APPLE_PASSWORD: ${{ secrets.APPLEPASSWORD }}
+        uses: actions/upload-artifact@v4
         with:
-          upload_url: https://apple.com
-          asset_path: build/ios/archive/Runner.xcarchive
+          name: app-release-ipa
+          path: build/ios/archive/Runner.xcarchive
