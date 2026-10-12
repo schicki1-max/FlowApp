@@ -1,103 +1,498 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datenschutzerklärung – Flow App</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      padding: 24px;
-      max-width: 800px;
-      margin: auto;
-      line-height: 1.6;
-      color: #333;
-    }
-    h1 { color: #111; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-    h2 { color: #222; margin-top: 28px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-    h3 { color: #444; margin-top: 20px; }
-    ul { padding-left: 20px; }
-    li { margin-bottom: 6px; }
-    a { color: #0066cc; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow – Dein smarter Gesundheits-Coach</title>
+<meta name="description" content="Flow ist deine All-in-One Gesundheits-App: KI Food Scanner, Kalorienzähler, Smart Coach und Nutri-Arena.">
+<style>
+  :root {
+    --cyan: #00FFFF;
+    --green: #39FF14;
+    --bg: #050505;
+    --panel: #101010;
+    --panel-border: #1f1f1f;
+    --text: #eaeaea;
+    --text-dim: #9a9a9a;
+    --radius: 14px;
+    --max: 880px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  a { color: var(--cyan); }
+  .glow-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: 
+      radial-gradient(600px circle at 15% 0%, rgba(0,255,255,0.10), transparent 60%),
+      radial-gradient(500px circle at 100% 30%, rgba(57,255,20,0.08), transparent 60%);
+  }
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 64px 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin: 14px 0 10px;
+    font-style: italic;
+  }
+  .tagline {
+    color: var(--text-dim);
+    font-size: 17px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: rgba(5,5,5,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--panel-border);
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    transition: 0.2s;
+  }
+  nav a:hover {
+    color: var(--cyan);
+    border-color: var(--cyan);
+  }
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 20px 20px 80px;
+  }
+  section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--panel-border);
+    scroll-margin-top: 70px;
+  }
+  section:last-child { border-bottom: none; }
+  .eyebrow {
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin: 0 0 24px;
+  }
+  h3 {
+    color: var(--cyan);
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    margin: 30px 0 8px;
+  }
+  p { color: #d5d5d5; margin: 0 0 14px; }
+  ul { color: #d5d5d5; padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .card .emoji { font-size: 26px; display: block; margin-bottom: 10px; }
+  .card h4 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px;
+  }
+  .card p { font-size: 13.5px; color: var(--text-dim); margin: 0; }
+  .lang-toggle {
+    display: inline-flex;
+    gap: 6px;
+    margin-top: 18px;
+  }
+  .lang-toggle button {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .lang-toggle button.active {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+  #desc-en { display: none; }
+  .legal-box {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 28px clamp(18px, 4vw, 34px);
+  }
+  .legal-box h3:first-child { margin-top: 0; }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 14px;
+  }
+  .contact-card {
+    background: var(--panel);
+    border: 1px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+  }
+  .contact-card a {
+    display: inline-block;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px 20px 50px;
+    color: #555;
+    font-size: 12px;
+  }
+  footer a { color: #777; }
+  .back-top {
+    display: inline-block;
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .back-top:hover { color: var(--cyan); }
+</style>
 </head>
 <body>
+<div class="glow-bg"></div>
+<header>
+  <div class="logo">FLOW</div>
+  <h1>Dein smarter Gesundheits-Coach</h1>
+  <p class="tagline">Kalorien tracken, Essen scannen, gesünder leben – mit KI an deiner Seite.</p>
+</header>
+<nav>
+  <a href="#app">App</a>
+  <a href="#datenschutz">Datenschutz</a>
+  <a href="#nutzungsbedingungen">Nutzungsbedingungen</a>
+  <a href="#kontakt">Kontakt</a>
+</nav>
+<main>
+  <!-- APP BESCHREIBUNG -->
+  <section id="app">
+    <div class="eyebrow">Über die App</div>
+    <h2>Flow – Dein täglicher Begleiter für ein gesünderes Leben</h2>
+    <div id="desc-de">
+      <p>Flow ist deine All-in-One Gesundheits-App für einen gesunden Lebensstil. Mit modernster KI-Technologie analysiert Flow deine Mahlzeiten, trackt deine Kalorien und gibt dir personalisierte Ernährungsempfehlungen.</p>
+    </div>
+    <div id="desc-en">
+      <p>Flow is your all-in-one health app for a healthy lifestyle. Using cutting-edge AI technology, Flow analyzes your meals, tracks your calories and gives you personalized nutrition recommendations.</p>
+    </div>
+    <div class="lang-toggle">
+      <button type="button" class="active" data-lang="de">DE</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+    <div class="features" style="margin-top: 32px;">
+      <div class="card">
+        <span class="emoji">📊</span>
+        <h4>KALORIENZÄHLER</h4>
+        <p>Verfolge deine tägliche Kalorienaufnahme, BMI und Energiehaushalt im Dashboard.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">🤖</span>
+        <h4>KI FOOD SCANNER</h4>
+        <p>Fotografiere dein Essen – die KI erkennt Lebensmittel und berechnet Nährwerte.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">👨‍🍳</span>
+        <h4>SMART COACH</h4>
+        <p>Personalisierte Rezeptvorschläge.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">🛒</span>
+        <h4>EINKAUFSLISTE</h4>
+        <p>Smarte Einkaufslisten zur Planung deiner Einkäufe.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">🏆</span>
+        <h4>NUTRI-ARENA</h4>
+        <p>Sammle Punkte, tritt gegen andere an und steige von Bronze bis Platin auf.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">⚡</span>
+        <h4>BODY CHECK</h4>
+        <p>Allgemeine Fitnessinformationen und praktische Übungstipps für den Alltag.</p>
+      </div>
+    </div>
+  </section>
 
-<h1>Datenschutzerklärung</h1>
-<p><strong>Flow App</strong> | Stand: 10.06.2026</p>
+  <!-- DATENSCHUTZ -->
+  <section id="datenschutz">
+    <div class="eyebrow">Rechtliches</div>
+    <h2>Datenschutzerklärung</h2>
+    <div class="legal-box">
+      <div class="meta-row">
+        <span>Flow App</span>
+        <span>Stand: 12.10.2026</span>
+      </div>
 
-<h2>1. Verantwortlicher</h2>
-<p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:<br>
-Roman Schicklgruber<br>
-E-Mail: <a href="mailto:romanschicklgruber@icloud.com">romanschicklgruber@icloud.com</a></p>
+      <h3>1. Verantwortlicher</h3>
+      <p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:<br>
+      <strong>Roman Schicklgruber</strong><br>
+      Steinweg 18a, 4050 Traun, Österreich<br>
+      E-Mail: <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a></p>
 
-<h2>2. Allgemeines</h2>
-<p>Der Schutz Ihrer persönlichen Daten ist uns ein besonderes Anliegen. Wir verarbeiten Ihre Daten daher ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TKG 2021). In dieser Datenschutzerklärung informieren wir Sie über die wichtigsten Aspekte der Datenverarbeitung im Rahmen unserer App Flow.</p>
+      <h3>2. Allgemeines</h3>
+      <p>Der Schutz Ihrer persönlichen Daten ist uns ein besonderes Anliegen. Wir verarbeiten Ihre Daten daher ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, TKG 2021). In dieser Datenschutzerklärung informieren wir Sie über die wichtigsten Aspekte der Datenverarbeitung im Rahmen unserer App Flow und der dazugehörigen Website.</p>
 
-<h2>3. Erhobene Daten und Zweck der Verarbeitung</h2>
+      <h3>3. Erhobene Daten und Zweck der Verarbeitung</h3>
+      <p><strong>3.1 Gesundheits- und Ernährungsdaten</strong></p>
+      <p>Bei der Nutzung der App werden folgende Daten erhoben und verarbeitet:</p>
+      <ul>
+        <li>Körperdaten (Gewicht, Größe, BMI)</li>
+        <li>Ernährungsdaten (gescannte Lebensmittel, Kalorienaufnahme)</li>
+        <li>Scan-Daten und gegebenenfalls gespeicherte Scan-Bilder</li>
+        <li>Einkaufslisten</li>
+        <li>Essensvorschläge des Smart Coach</li>
+        <li>Punkte- und Ranglistendaten der Nutri-Arena</li>
+      </ul>
+      <p>Diese Daten werden zur Bereitstellung der App-Funktionalitäten (Kalorienzähler, BMI-Berechnung, Einkaufsliste, Smart Coach und Nutri-Arena) verwendet.</p>
 
-<h3>3.1 Gesundheits- und Ernährungsdaten</h3>
-<p>Bei der Nutzung der App werden folgende Daten erhoben und verarbeitet:</p>
-<ul>
-  <li>Körperdaten (Gewicht, Größe, BMI)</li>
-  <li>Ernährungsdaten (gescannte Lebensmittel, Kalorienaufnahme)</li>
-  <li>Einkaufslisten</li>
-  <li>Essensvorschläge des Smart Coach</li>
-</ul>
-<p>Diese Daten werden ausschließlich zur Bereitstellung der App-Funktionalitäten (Kalorienzähler, BMI-Berechnung, Einkaufsliste, Smart Coach) verwendet.</p>
+      <p><strong>3.2 Food-Scanner (Mahlzeitenfotos)</strong></p>
+      <p>Unsere App kann die Kamera oder den Fotozugriff Ihres Geräts verwenden, um Mahlzeiten zu erfassen. Die ausgewählten oder aufgenommenen Bilder werden zur Erkennung von Lebensmitteln und zur Schätzung von Nährwerten über unseren Backend-Dienst an OpenAI übermittelt. Scan-Datensätze können im Supabase-Backend gespeichert werden; Bilddateien können zusätzlich im Supabase-Storage abgelegt und einem Scan bzw. Nutzerkonto zugeordnet werden. Solche Bilddateien sind nicht automatisch anonymisiert. Die konkrete Speicherung hängt vom jeweiligen Scan-Ablauf ab. Angaben zu Kalorien und Nährwerten sind KI-gestützte Schätzungen und können ungenau sein.</p>
 
-<h3>3.2 Kamera-Nutzung (Barcode- und Kassenbonscanner)</h3>
-<p>Unsere App verwendet die Kamera Ihres Geräts zum Scannen von Barcodes (Lebensmittel) und Kassenbons. Die gescannten Daten werden zur Erkennung von Produkten und Nährwerten verwendet. Es werden keine Bilder dauerhaft gespeichert.</p>
+      <p><strong>3.3 Supabase (Backend &amp; Datenbank)</strong></p>
+      <p>Wir verwenden Supabase als Backend-Dienstleister zur Verwaltung von Nutzerkonten und zur Speicherung von App-Daten. Die für dieses Projekt konfigurierte Supabase-Projektregion ist laut Projekteinstellungen Frankfurt, Deutschland. Diese Angabe betrifft die konfigurierte Projektregion; sie bedeutet nicht, dass sämtliche Verarbeitung durch alle anderen eingebundenen Anbieter ausschließlich in Deutschland oder der EU stattfindet. Weitere Informationen finden Sie unter: <a href="https://supabase.com/privacy" target="_blank" rel="noopener">supabase.com/privacy</a></p>
 
-<h3>3.3 Supabase (Backend &amp; Datenbank)</h3>
-<p>Wir verwenden Supabase als Backend-Dienst zur sicheren Speicherung Ihrer Daten. Supabase ist ein europäischer Dienst, der DSGVO-konform betrieben wird. Weitere Informationen: <a href="https://supabase.com/privacy">https://supabase.com/privacy</a></p>
+      <p><strong>3.4 KI-Dienst (OpenAI)</strong></p>
+      <p>Für KI-Funktionen wie die Erkennung von Mahlzeiten und KI-gestützte Text- bzw. Rezeptvorschläge verwendet FlowApp die OpenAI-API über den Backend-Dienst. Dabei werden die zur jeweiligen Anfrage erforderlichen Bild- und/oder Textdaten an OpenAI übermittelt. Eine Verarbeitung oder Übermittlung in die USA oder andere Drittländer kann nicht ausgeschlossen werden. OpenAI nennt in seinen Vertragsunterlagen unter anderem Standardvertragsklauseln bzw. Angemessenheitsbeschlüsse als mögliche Übermittlungsmechanismen; die für FlowApp konkret geltende Grundlage muss anhand des verwendeten API-Vertrags und Kontos geprüft werden. OpenAI gibt an, API-Eingaben und -Ausgaben standardmäßig nicht zum Training seiner Modelle zu verwenden, sofern keine ausdrückliche Freigabe dafür erfolgt. Weitere Informationen: <a href="https://openai.com/business-data/" target="_blank" rel="noopener">openai.com/business-data</a> und <a href="https://openai.com/policies/data-processing-addendum/" target="_blank" rel="noopener">OpenAI Data Processing Addendum</a>.</p>
 
-<h3>3.4 Werbung</h3>
-<p>Unsere App kann Werbeanzeigen einblenden, um kostenlose Funktionen zu finanzieren. Hierfür kann eine geräteseitige Werbekennung (Advertising ID) verwendet werden. Anhand dieser Technologie können Nutzungsprofile erstellt und interessenbasierte Werbung geschaltet werden.</p>
-<p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</p>
-<p>Sie können personalisierte Werbung jederzeit über die Datenschutz-Einstellungen Ihres Geräts einschränken oder deaktivieren. Die genaue Bezeichnung und der genaue Pfad dieser Einstellung hängen vom verwendeten Betriebssystem und Gerätehersteller ab; Details finden Sie in den Einstellungen Ihres Geräts unter „Datenschutz" bzw. „Werbung".</p>
-<p>Weitere Informationen zur Verarbeitung durch unseren Werbepartner: <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a></p>
+      <p><strong>3.5 Google AdMob (Werbung)</strong></p>
+      <p>Google AdMob ist als Werbedienst für die App vorgesehen. Werbeanzeigen werden nur eingeblendet, wenn die Werbefunktion in der jeweiligen App-Version aktiviert ist. Bei aktivierter Werbefunktion können technische Geräteinformationen und – abhängig von Einwilligung, Werbeeinstellungen und Betriebssystem – die Werbe-ID verarbeitet werden. Personalisierte Werbung wird nur im Rahmen der erforderlichen Einwilligungen und Einstellungen bereitgestellt. Weitere Informationen: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
 
-<h2>4. Rechtsgrundlagen der Verarbeitung</h2>
-<p>Die Verarbeitung Ihrer Daten erfolgt auf folgenden Rechtsgrundlagen:</p>
-<ul>
-  <li>Art. 6 Abs. 1 lit. a DSGVO – Einwilligung (z. B. für Werbung)</li>
-  <li>Art. 6 Abs. 1 lit. b DSGVO – Vertragserfüllung (Bereitstellung der App-Funktionen)</li>
-  <li>Art. 9 Abs. 2 lit. a DSGVO – ausdrückliche Einwilligung (Gesundheitsdaten)</li>
-</ul>
+      <p><strong>3.6 Vercel Web Analytics &amp; Speed Insights</strong></p>
+      <p>Auf dieser Website sind Vercel Web Analytics und Vercel Speed Insights eingebunden. Web Analytics verarbeitet Nutzungsinformationen wie aufgerufene Seiten bzw. URLs, Referrer, Zeitstempel sowie technische Angaben zu Browser, Betriebssystem, Gerät und ungefährer Region. Zur Ermittlung wiederkehrender Besuche verwendet Vercel eine aus der Anfrage gebildete Hash-Kennung, die laut Vercel nach spätestens 24 Stunden verworfen wird. Es werden keine Drittanbieter-Cookies eingesetzt; das bedeutet jedoch nicht, dass keinerlei Nutzungsdaten verarbeitet werden. Speed Insights übermittelt technische Leistungswerte der Website (Web Vitals, etwa Lade- und Darstellungszeiten) zusammen mit technischen Angaben wie Route, Browser, Gerät und Betriebssystem. Vercel beschreibt die Erfassung als auf aggregierte bzw. nicht direkt identifizierende Statistik ausgelegt. Weitere Informationen: <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener">Vercel Web Analytics – Datenschutz</a> und <a href="https://vercel.com/docs/speed-insights/privacy-policy" target="_blank" rel="noopener">Vercel Speed Insights – Datenschutz</a>.</p>
 
-<h2>5. Datenspeicherung und -löschung</h2>
-<p>Ihre Daten werden nur so lange gespeichert, wie es für die Erbringung unserer Dienste notwendig ist oder gesetzliche Aufbewahrungspflichten bestehen. Sie können Ihr Konto und alle damit verbundenen Daten jederzeit über die App löschen.</p>
+      <h3>4. Rechtsgrundlagen der Verarbeitung</h3>
+      <p>Die Verarbeitung Ihrer Daten erfolgt – abhängig von der Funktion und dem jeweiligen Verarbeitungsvorgang – insbesondere auf folgenden Rechtsgrundlagen:</p>
+      <ul>
+        <li>Art. 6 Abs. 1 lit. a DSGVO – Einwilligung, insbesondere soweit sie für bestimmte Werbe- oder Tracking-Funktionen erforderlich ist</li>
+        <li>Art. 6 Abs. 1 lit. b DSGVO – Vertragserfüllung bzw. Bereitstellung angeforderter App-Funktionen</li>
+        <li>Art. 9 Abs. 2 lit. a DSGVO – ausdrückliche Einwilligung, soweit besondere Kategorien personenbezogener Daten, insbesondere Gesundheitsdaten, verarbeitet werden</li>
+        <li>Art. 6 Abs. 1 lit. f DSGVO – berechtigte Interessen, soweit die Voraussetzungen für die jeweilige technische Analyse und Optimierung erfüllt sind</li>
+      </ul>
 
-<h2>6. Weitergabe von Daten</h2>
-<p>Wir geben Ihre Daten nicht an Dritte weiter, außer in folgenden Fällen:</p>
-<ul>
-  <li>Auftragsverarbeiter, die uns beim Betrieb der App unterstützen (z. B. Backend-Hosting, Werbenetzwerke) – nur im notwendigen Umfang</li>
-  <li>Gesetzliche Verpflichtung – wenn wir dazu rechtlich verpflichtet sind</li>
-</ul>
+      <h3>5. Datenspeicherung und -löschung</h3>
+      <p>Daten werden so lange gespeichert, wie es für den jeweiligen Zweck erforderlich ist oder gesetzliche Pflichten eine weitere Speicherung verlangen. Je nach Funktion können Daten in der Datenbank und gegebenenfalls zugehörige Bilddateien im Speicherbereich des App-Backends liegen. Sie können die Kontolöschung über die App-Einstellungen anstoßen. Für die Ausübung Ihres Rechts auf Löschung oder falls die Löschfunktion nicht verfügbar ist, wenden Sie sich bitte an <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a>. Gesetzliche Aufbewahrungspflichten bleiben unberührt.</p>
 
-<h2>7. Ihre Rechte</h2>
-<p>Sie haben folgende Rechte bezüglich Ihrer personenbezogenen Daten:</p>
-<ul>
-  <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
-  <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
-  <li>Recht auf Löschung (Art. 17 DSGVO)</li>
-  <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-  <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
-  <li>Widerspruchsrecht (Art. 21 DSGVO)</li>
-  <li>Recht auf Widerruf der Einwilligung (Art. 7 Abs. 3 DSGVO)</li>
-</ul>
-<p>Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:romanschicklgruber@icloud.com">romanschicklgruber@icloud.com</a></p>
+      <h3>6. Weitergabe von Daten</h3>
+      <p>Eine Weitergabe an Dienstleister erfolgt nur, soweit sie für die jeweilige Funktion erforderlich ist. Dazu zählen:</p>
+      <ul>
+        <li>Supabase – Backend, Datenbank und gegebenenfalls Speicherung von Scan-Dateien</li>
+        <li>OpenAI – Verarbeitung der dafür erforderlichen KI-Anfragen</li>
+        <li>Google AdMob – Werbedienst, sofern die Werbefunktion aktiviert ist</li>
+        <li>Vercel – Hosting sowie die auf dieser Website eingebundenen Analyse- und Leistungsdienste</li>
+        <li>Gesetzliche Verpflichtungen, sofern eine rechtmäßige Offenlegung erforderlich ist</li>
+      </ul>
 
-<h2>8. Beschwerderecht</h2>
-<p>Sie haben das Recht, sich bei der österreichischen Datenschutzbehörde zu beschweren:<br>
-Datenschutzbehörde Österreich<br>
-Barichgasse 40-42, 1030 Wien<br>
-<a href="mailto:dsb@dsb.gv.at">dsb@dsb.gv.at</a> | <a href="https://www.dsb.gv.at">www.dsb.gv.at</a></p>
+      <h3>7. Ihre Rechte</h3>
+      <p>Sie haben folgende Rechte bezüglich Ihrer personenbezogenen Daten:</p>
+      <ul>
+        <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
+        <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
+        <li>Recht auf Löschung (Art. 17 DSGVO)</li>
+        <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
+        <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
+        <li>Widerspruchsrecht (Art. 21 DSGVO)</li>
+        <li>Recht auf Widerruf der Einwilligung (Art. 7 Abs. 3 DSGVO)</li>
+      </ul>
+      <p>Zur Ausübung Ihrer Rechte wenden Sie sich bitte an: <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a></p>
 
-<h2>9. Änderungen dieser Datenschutzerklärung</h2>
-<p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen. Die aktuelle Version ist stets in der App verfügbar.</p>
-<p>Stand: 10.06.2026</p>
+      <h3>8. Beschwerderecht</h3>
+      <p>Sie haben das Recht, sich bei der zuständigen Aufsichtsbehörde zu beschweren:</p>
+      <p><strong>Datenschutzbehörde Österreich</strong><br>
+      Barichgasse 40-42, 1030 Wien<br>
+      <a href="mailto:dsb@dsb.gv.at">dsb@dsb.gv.at</a> | <a href="https://www.dsb.gv.at" target="_blank" rel="noopener">www.dsb.gv.at</a></p>
 
+      <h3>9. Änderungen dieser Datenschutzerklärung</h3>
+      <p>Wir behalten uns vor, diese Datenschutzerklärung bei technischen oder rechtlichen Änderungen anzupassen. Die jeweils aktuelle Version ist stets auf der Website verfügbar.</p>
+
+      <p style="color:#666; font-size:12px; margin-top:24px;">Stand: 12.10.2026</p>
+    </div>
+    <a href="#app" class="back-top">↑ Zurück nach oben</a>
+  </section>
+
+  <!-- NUTZUNGSBEDINGUNGEN -->
+  <section id="nutzungsbedingungen">
+    <div class="eyebrow">Rechtliches</div>
+    <h2>Nutzungsbedingungen</h2>
+    <div class="legal-box">
+      <div class="meta-row">
+        <span>Flow App</span>
+        <span>Stand: 12.10.2026</span>
+      </div>
+
+      <h3>1. Geltungsbereich</h3>
+      <p>Diese Nutzungsbedingungen gelten für die Nutzung der mobilen Anwendung Flow (nachfolgend "App") auf iOS- und Android-Geräten. Betreiber der App ist Roman Schicklgruber, Steinweg 18a, 4050 Traun, Österreich (<a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a>).</p>
+      <p>Mit dem Download und der Nutzung der App erklären Sie sich mit diesen Nutzungsbedingungen einverstanden.</p>
+
+      <h3>2. Leistungsbeschreibung</h3>
+      <p>Die App Flow bietet folgende Funktionen:</p>
+      <ul>
+        <li>KI Food Scanner zur Analyse von Mahlzeitenfotos</li>
+        <li>Kalorienzähler und Nährwert-Tracking</li>
+        <li>BMI-Anzeige und persönliche Aktivitätsübersicht</li>
+        <li>Einkaufsliste</li>
+        <li>Smart Coach mit KI-gestützten Mahlzeiten- und Rezeptvorschlägen</li>
+        <li>Nutri-Arena mit Punkten und Ranglisten</li>
+        <li>Body Check zur Übersicht allgemeiner Fitness- und Übungstipps</li>
+      </ul>
+
+      <h3>3. Registrierung und Nutzerkonto</h3>
+      <p>Zur Nutzung der App kann eine Registrierung erforderlich sein. Sie sind verpflichtet, Ihre Zugangsdaten vertraulich zu behandeln. Für Aktivitäten, die über Ihr Benutzerkonto durchgeführt werden, tragen Sie im Rahmen der gesetzlichen Bestimmungen die Verantwortung.</p>
+
+      <h3>4. Gesundheitshinweis</h3>
+      <p>Die App Flow dient ausschließlich zur allgemeinen Ernährungs- und Fitnessinformation. Die bereitgestellten Informationen, Analysen und Empfehlungen des Smart Coach ersetzen keine professionelle medizinische, ärztliche oder ernährungstherapeutische Beratung.</p>
+      <p><strong>Bei gesundheitlichen Beschwerden, Vorerkrankungen oder speziellen Ernährungsbedürfnissen konsultieren Sie bitte stets qualifiziertes Fachpersonal.</strong></p>
+
+      <h3>5. Pflichten des Nutzers</h3>
+      <p>Sie verpflichten sich, die App ausschließlich im Rahmen der Bestimmungen zu nutzen und insbesondere folgende Handlungen zu unterlassen:</p>
+      <ul>
+        <li>Inanspruchnahme der Dienste in missbräuchlicher oder rechtswidriger Weise</li>
+        <li>Weitergabe von Zugangsdaten an unbefugte Dritte</li>
+        <li>Versuche, die Anwendungsstruktur zu manipulieren, zu stören oder zu dekompilieren</li>
+      </ul>
+
+      <h3>6. Werbefinanzierung</h3>
+      <p>Die App wird kostenlos bereitgestellt. Werbeanzeigen über Google AdMob sind vorgesehen und werden nur eingeblendet, wenn die Werbefunktion in der jeweiligen App-Version aktiviert ist. Bei aktiver Werbefunktion gelten die in der Datenschutzerklärung beschriebenen Datenverarbeitungen und erforderlichen Einwilligungen.</p>
+
+      <h3>7. Verfügbarkeit und Änderungen</h3>
+      <p>Wir bemühen uns um eine hohe Verfügbarkeit der App-Dienste, übernehmen jedoch keine Gewährleistung für eine unterbrechungsfreie Erreichbarkeit. Wir behalten uns vor, App-Funktionen im Zuge der Weiterentwicklung anzupassen oder zu aktualisieren.</p>
+
+      <h3>8. Haftungsausschluss</h3>
+      <p>Wir haften für Vorsatz und grobe Fahrlässigkeit. Für leichte Fahrlässigkeit wird die Haftung – soweit gesetzlich zulässig – ausgeschlossen. Insbesondere wird keine Haftung für unvollständige Angaben oder Folgen aus der eigenverantwortlichen Umsetzung von Ernährungsempfehlungen übernommen.</p>
+
+      <h3>9. Geistiges Eigentum</h3>
+      <p>Alle Inhalte, Markenzeichen und Designs der App sind urheberrechtlich geschützt. Eine Vervielfältigung oder kommerzielle Verwendung ohne ausdrückliche Zustimmung ist nicht gestattet.</p>
+
+      <h3>10. Kündigung / Löschen des Kontos</h3>
+      <p>Sie können die Nutzung der App jederzeit beenden. Die Kontolöschung kann über die App-Einstellungen angestoßen werden. Falls die Löschfunktion nicht verfügbar ist oder Sie die Löschung personenbezogener Daten gesondert geltend machen möchten, kontaktieren Sie bitte <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a>.</p>
+
+      <h3>11. Anwendbares Recht und Gerichtsstand</h3>
+      <p>Es gilt österreichisches Recht unter Ausschluss des UN-Kaufrechts. Gesetzliche Gerichtsstände bleiben unberührt.</p>
+
+      <h3>12. Kontakt</h3>
+      <p><strong>Roman Schicklgruber</strong><br>
+      Steinweg 18a, 4050 Traun, Österreich<br>
+      E-Mail: <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a></p>
+
+      <h3>13. Änderungen der Nutzungsbedingungen</h3>
+      <p>Wir behalten uns vor, diese Bedingungen bei Bedarf anzupassen. Die aktuelle Fassung steht in der App und auf der Website zur Verfügung.</p>
+
+      <p style="color:#666; font-size:12px; margin-top:24px;">Stand: 12.10.2026</p>
+    </div>
+    <a href="#app" class="back-top">↑ Zurück nach oben</a>
+  </section>
+
+  <!-- KONTAKT / IMPRESSUM -->
+  <section id="kontakt">
+    <div class="eyebrow">Impressum</div>
+    <h2>Kontakt &amp; Impressum</h2>
+    <div class="contact-card">
+      <p style="margin-bottom:4px; font-weight:700;">Roman Schicklgruber</p>
+      <p style="margin-bottom:4px; color:var(--text-dim); font-size:14px;">Steinweg 18a, 4050 Traun, Österreich</p>
+      <p style="margin-bottom:10px; color:var(--text-dim); font-size:14px;">
+        Webseite: <a href="https://get-flowapp.com" target="_blank" rel="noopener">get-flowapp.com</a>
+      </p>
+      <a href="mailto:info@get-flowapp.com">info@get-flowapp.com</a>
+    </div>
+  </section>
+</main>
+<footer>
+  © 2026 Flow App · Roman Schicklgruber · 
+  <a href="#datenschutz">Datenschutz</a> · <a href="#nutzungsbedingungen">Nutzungsbedingungen</a>
+</footer>
+<script>
+  var buttons = document.querySelectorAll('.lang-toggle button');
+  var descDe = document.getElementById('desc-de');
+  var descEn = document.getElementById('desc-en');
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      buttons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.dataset.lang === 'en') {
+        descDe.style.display = 'none';
+        descEn.style.display = 'block';
+      } else {
+        descDe.style.display = 'block';
+        descEn.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<!-- Vercel Web Analytics -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<!-- Vercel Speed Insights -->
+<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
